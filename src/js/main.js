@@ -1,5 +1,6 @@
 class Coffee{
-    constructor(name, origin, price){
+    constructor(id, name, origin, price){
+        this.id = id;
         this.name = name;
         this.origin = origin;
         this.price = price;
@@ -7,17 +8,17 @@ class Coffee{
 }
 
 const coffeeList = [
-    new Coffee('Ethiopian Yirgacheffe', 'Ethiopia', 18.99),
-    new Coffee('Colombian Supremo', 'Colombia', 16.49),
-    new Coffee('Guatemalan Antigua', 'Guatemala', 17.75),
-    new Coffee('Costa Rican Tarrazu', 'Costa Rica', 18.00),
-    new Coffee('Brazilian Santos', 'Brazil', 15.99),
-    new Coffee('Honduran Marcala', 'Honduras', 16.25),
-    new Coffee('Ethiopian Sidamo', 'Ethiopia', 19.75),
-    new Coffee('Colombian Excelso', 'Colombia', 17.00),
-    new Coffee('Guatemalan Huehuetenango', 'Guatemala', 18.50),
-    new Coffee('Sumatra Lintong', 'Indonesia', 20.00),
-    new Coffee('Costa Rican Brunca', 'Costa Rica', 17.50)
+    new Coffee(1,'Ethiopian Yirgacheffe', 'Ethiopia', 18.99),
+    new Coffee(2,'Colombian Supremo', 'Colombia', 16.49),
+    new Coffee(3,'Guatemalan Antigua', 'Guatemala', 17.75),
+    new Coffee(4,'Costa Rican Tarrazu', 'Costa Rica', 18.00),
+    new Coffee(5,'Brazilian Santos', 'Brazil', 15.99),
+    new Coffee(6,'Honduran Marcala', 'Honduras', 16.25),
+    new Coffee(7,'Ethiopian Sidamo', 'Ethiopia', 19.75),
+    new Coffee(8,'Colombian Excelso', 'Colombia', 17.00),
+    new Coffee(9,'Guatemalan Huehuetenango', 'Guatemala', 18.50),
+    new Coffee(10,'Sumatra Lintong', 'Indonesia', 20.00),
+    new Coffee(11,'Costa Rican Brunca', 'Costa Rica', 17.50)
 ];
 
 //1. List all coffees.
@@ -40,39 +41,79 @@ const orderedList = (order) => {
     }
 }
 
-//4. List coffe by specific origin.
-const originList = (origin) => {
+//4. List coffee by specific origin.
+const originList = () => {
+    while (typeof origin !== string) { /*No anda*/
+        
+    }
+    let origin = prompt("Enter a country to filter the coffee from");
     const originList = coffeeList.filter(el => el.origin.toLowerCase() === origin.toLowerCase());
     const originMessage = originList.map(el => `${el.name}, ${el.origin}, ${el.price}`).join('\n\n');
     alert(`${originList[0].origin}'s coffee list: \n\n${originMessage}`);
 }
 
+//5. Add coffees to cart.
 const cart = [];
-
-//5. Add coffes to cart.
 const addCart = () => {
-    let i = 1, loop = 1;
-    while (loop === 1) {
-        const message = coffeeList.map((el, index) => `${index+1} ${el.name}, ${el.origin}, ${el.price}`).join('\n\n');
-        let item = parseInt(prompt(`Select one item or more to add to the cart: \n\n ${message}`));
-        cart.push()
-        item = parseInt(prompt(`Press 1 to add another item to the cart, press 0 to exit`));
-    }
+    let loop;
+    do {
+        const message = coffeeList.map((el, index) => `${el.id} ${el.name}, ${el.origin}, ${el.price}`).join('\n\n');
+        let item = parseInt(prompt(`Select one item to add to the cart: \n\n ${message}`));
+        const searched = coffeeList.find(el => el.id === item);
+        cart.push(searched);
+        loop = parseInt(prompt(`Press 1 to add another item to the cart, press 0 to go back`));
+    }while (loop === 1)
 }
 
 //6. Remove coffees from cart.
 const removeCart = () => {
+    let loop;
+    do {
+        const message = cart.map((el, index) => `${el.id} ${el.name}, ${el.origin}, ${el.price}`).join('\n\n');
+        let item = parseInt(prompt(`Select one item to remove from the cart: \n\n ${message}`));
+        const searched = coffeeList.find(el => el.id === item);
+        
+        cart.splice(searched.id, 1);
+        alert(`The item ${searched.name} has been removed from the cart`);
 
+        loop = parseInt(prompt(`Press 1 to remove another item to the cart, press 0 to go back`));
+    }while (loop === 1)
 }
 
 //7. Show cart.
 const showCart = () => {
-
+    const message = cart.map(el => `${el.name}, ${el.origin}, ${el.price}`).join('\n\n');
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
+    alert(`Current cart total: ${total}\n\n Current cart:\n\n${message}`);
 }
 
-//8. Cashout.
-const cashout = () => {
+//8. Checkout.
+const checkout = () => {
+    const total = cart.reduce((sum, item) => sum + item.price, 0);
 
+    if(confirm(`Your total is ${total}. Proceed to Checkout?`)){
+        let cardOwner = prompt("Enter your name as it appears on the card");
+            if (cardOwner === "") {
+                alert("Warning! You must enter a valid name");
+                return;
+            }
+        let cardNumber = parseInt(prompt("Enter your card number"));
+            if (cardNumber === "0" || typeof cardNumber !== "number") {
+                alert("Warning! You must enter a valid card number");
+                return;
+            }
+        let cardCode = parseInt(prompt("Enter your card security code"));
+            if (cardCode === "0" || typeof cardCode !== "number") {
+                alert("Warning! You must enter a valid card code");
+                return;
+            }
+        let cardExpiryDate = prompt("Enter your card expiry date (MM/YYYY)");
+        if (cardExpiryDate) { /*Manejar info de date*/
+            alert("Warning! You must enter a valid card expiry date");
+            return;
+        }
+        alert("Thank you for your purchase at Console Commerce!");
+    }
 }
 
 const menu = () => {
@@ -86,7 +127,7 @@ const menu = () => {
         5. Add coffes to cart.
         6. Remove coffees from cart.
         7. Show cart.
-        8. Cashout.`));
+        8. Checkout.`));
         switch (op) {
             case 1:
                 //1. List all coffees by ascendent price.
@@ -101,9 +142,8 @@ const menu = () => {
                 orderedList("desc");
                 break;
             case 4:
-                //4. List coffe by specific origin.
-                let origin = prompt("Enter a country to filter the coffee from");
-                originList(origin);
+                //4. List coffee by specific origin.
+                originList();
                 break;
             case 5:
                 //5. Add coffes to cart.
@@ -118,13 +158,13 @@ const menu = () => {
                 showCart();
                 break;
             case 8:
-                //8. Cashout.
-                cashout();
+                //8. Checkout.
+                checkout();
                 break;
             default:
                 break;
         }
-        loop = parseInt(prompt(`Press 1 to continue. Press 0 to exit.`));
+        loop = parseInt(prompt(`Press 1 to go back to the menu. Press 0 to exit from Console Coffee.`));
     }
 }
 setTimeout(() => {menu()}, 500);
