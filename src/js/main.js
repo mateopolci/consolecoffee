@@ -43,10 +43,12 @@ const orderedList = (order) => {
 
 //4. List coffee by specific origin.
 const originList = () => {
-    while (typeof origin !== string) { /*No anda*/
-        
-    }
     let origin = prompt("Enter a country to filter the coffee from");
+    const validOrigin = coffeeList.find(el => el.origin.toLowerCase() === origin);
+    if (!validOrigin) {
+        alert("Please enter a valid country from the coffee list.");
+        return;
+    }
     const originList = coffeeList.filter(el => el.origin.toLowerCase() === origin.toLowerCase());
     const originMessage = originList.map(el => `${el.name}, ${el.origin}, ${el.price}`).join('\n\n');
     alert(`${originList[0].origin}'s coffee list: \n\n${originMessage}`);
