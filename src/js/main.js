@@ -20,8 +20,6 @@ const coffeeList = [
     new Coffee('Costa Rican Brunca', 'Costa Rica', 17.50)
 ];
 
-const cart = [];
-
 //1. List all coffees.
 const list = () => {
     const message = coffeeList.map(el => `${el.name}, ${el.origin}, ${el.price}`).join('\n\n');
@@ -49,14 +47,16 @@ const originList = (origin) => {
     alert(`${originList[0].origin}'s coffee list: \n\n${originMessage}`);
 }
 
+const cart = [];
+
 //5. Add coffes to cart.
 const addCart = () => {
-    let i = 1;
+    let i = 1, loop = 1;
     while (loop === 1) {
         const message = coffeeList.map((el, index) => `${index+1} ${el.name}, ${el.origin}, ${el.price}`).join('\n\n');
         let item = parseInt(prompt(`Select one item or more to add to the cart: \n\n ${message}`));
-
-        item = parseInt(prompt(`Do you wish to add another item to the cart?`));
+        cart.push()
+        item = parseInt(prompt(`Press 1 to add another item to the cart, press 0 to exit`));
     }
 }
 
