@@ -23,7 +23,7 @@ const coffeeList = [
 
 //1. List all coffees.
 const list = () => {
-    const message = coffeeList.map(el => `${el.name}, ${el.origin}, ${el.price}`).join('\n\n');
+    const message = coffeeList.map(el => `${el.name}, ${el.origin}, USD$${el.price}`).join('\n\n');
     alert(`Coffee list: \n\n${message}`);
 }
 
@@ -32,11 +32,11 @@ const orderedList = (order) => {
     const orderedList = [...coffeeList];
     if (order === "asc") {
         orderedList.sort((a,b) => a.price - b.price);
-        const orderedMessage = orderedList.map(el => `${el.name}, ${el.origin}, ${el.price}`).join('\n\n');
+        const orderedMessage = orderedList.map(el => `${el.name}, ${el.origin}, USD$${el.price}`).join('\n\n');
         alert(`Coffee list ordered by ascendent price: \n\n${orderedMessage}`);
     } else if (order === "desc"){
         orderedList.sort((a,b) => b.price - a.price);
-        const orderedMessage = orderedList.map(el => `${el.name}, ${el.origin}, ${el.price}`).join('\n\n');
+        const orderedMessage = orderedList.map(el => `${el.name}, ${el.origin}, USD$${el.price}`).join('\n\n');
         alert(`Coffee list ordered by descendent price: \n\n${orderedMessage}`);
     }
 }
@@ -44,13 +44,13 @@ const orderedList = (order) => {
 //4. List coffee by specific origin.
 const originList = () => {
     let origin = prompt("Enter a country to filter the coffee from");
-    const validOrigin = coffeeList.find(el => el.origin.toLowerCase() === origin);
+    const validOrigin = coffeeList.find(el => el.origin.toLowerCase() === origin.toLowerCase());
     if (!validOrigin) {
         alert("Please enter a valid country from the coffee list.");
         return;
     }
     const originList = coffeeList.filter(el => el.origin.toLowerCase() === origin.toLowerCase());
-    const originMessage = originList.map(el => `${el.name}, ${el.origin}, ${el.price}`).join('\n\n');
+    const originMessage = originList.map(el => `${el.name}, ${el.origin}, USD$${el.price}`).join('\n\n');
     alert(`${originList[0].origin}'s coffee list: \n\n${originMessage}`);
 }
 
@@ -59,8 +59,8 @@ const cart = [];
 const addCart = () => {
     let loop;
     do{
-        const message = coffeeList.map((el, index) => `${el.id} ${el.name}, ${el.origin}, ${el.price}`).join('\n\n');
-        let item = parseInt(prompt(`Select one item to add to the cart: \n\n ${message}`));
+        const message = coffeeList.map((el, index) => `${el.id} ${el.name}, ${el.origin}, USD$${el.price}`).join('\n\n');
+        let item = parseInt(prompt(`Select one item to add to the cart:\n\n${message}`));
         const searched = coffeeList.find(el => el.id === item);
         cart.push(searched);
         loop = confirm("Would you like to add another item to the cart?")
@@ -71,8 +71,13 @@ const addCart = () => {
 const removeCart = () => {
     let loop;
     do{
-        const message = cart.map((el, index) => `${el.id} ${el.name}, ${el.origin}, ${el.price}`).join('\n\n');
-        let item = parseInt(prompt(`Select one item to remove from the cart: \n\n ${message}`));
+        if (cart.length === 0) {
+            alert("The cart is empty.");
+            return;
+        }
+        const message = cart.map((el, index) => `${el.id} ${el.name}, ${el.origin}, USD$${el.price}`).join('\n\n');
+        let item = parseInt(prompt(`Select one item to remove from the cart:\n\n${message}`));
+        
         const searched = coffeeList.find(el => el.id === item);
         
         cart.splice(searched.id, 1);
@@ -82,52 +87,55 @@ const removeCart = () => {
 
 //7. Show cart.
 const showCart = () => {
-    const message = cart.map(el => `${el.name}, ${el.origin}, ${el.price}`).join('\n\n');
-    const total = cart.reduce((sum, item) => sum + item.price, 0);
-    alert(`Current cart total: ${total}\n\n Current cart:\n\n${message}`);
+    if (cart.length === 0) {
+        alert("The cart is empty.");
+        return;
+    }
+    const message = cart.map(el => `${el.name}, ${el.origin}, USD$${el.price}`).join('\n\n');
+    const total = parseFloat(cart.reduce((sum, item) => sum + item.price, 0).toFixed(2));
+    //const total = cart.reduce((sum, item) => sum + item.price, 0);
+    alert(`Current cart total: USD$${total}\n\nCurrent cart:\n\n${message}`);
 }
 
 //8. Checkout.
 const checkout = () => {
+    const message = cart.map(el => `${el.name}, ${el.origin}, USD$${el.price}`).join('\n\n');
     const total = cart.reduce((sum, item) => sum + item.price, 0);
 
     if(confirm(`Your total is ${total}. Proceed to Checkout?`)){
-        let cardOwner = prompt("Enter your name as it appears on the card");
-            if (cardOwner === "") {
-                alert("Warning! You must enter a valid name");
-                return;
-            }
+        let cardOwner = prompt("Enter your name as it appears on your credit/debit card");
+        if (cardOwner === "" || cardOwner.toString().length < 5 || cardOwner.toString().length > 40) {
+            alert("Warning! The name appears to be empty, too short or too long.");
+            return;
+        }
+
         let cardNumber = parseInt(prompt("Enter your card number"));
-            if (cardNumber === "0" || typeof cardNumber !== "number") {
-                alert("Warning! You must enter a valid card number");
-                return;
-            }
+        let cardNumberString = cardNumber.toString();
+        if (cardNumber === 0 || cardNumberString.length < 14 || cardNumberString.length > 16) {
+            alert("Warning! The number should range from 14 to 16 digits.");
+            return;
+        }
+
         let cardCode = parseInt(prompt("Enter your card security code"));
-            if (cardCode === "0" || typeof cardCode !== "number") {
-                alert("Warning! You must enter a valid card code");
-                return;
-            }
+        let cardCodeString = cardCode.toString();
+        if (cardCode === 0 || cardCodeString.length < 3 || cardCodeString.length > 4) {
+            alert("Warning! The code should range from 3 to 4 digits.");
+            return;
+        }
+
         let cardExpiryDate = prompt("Enter your card expiry date (MM/YYYY)");
-        if (cardExpiryDate) { /*Manejar info de date*/
+        if (cardExpiryDate === "") {
             alert("Warning! You must enter a valid card expiry date");
             return;
         }
-        alert("Thank you for your purchase at Console Commerce!");
+        alert(`Thank you for your purchase at Console Commerce!\nHere's your recipt:\n\nFull name: ${cardOwner}\nPurchase date: ${new Date().toLocaleString()}\nItems bought:\n\n${message}\n\nTotal: ${total}`);
     }
 }
 
 const menu = () => {
     let loop;
     do{  
-        let op = parseInt(prompt(`Enter a number to pick an option:
-        1. List all coffees.
-        2. List all coffees by ascendent price.
-        3. List all coffees by descendent price.
-        4. List coffe by specific origin.
-        5. Add coffes to cart.
-        6. Remove coffees from cart.
-        7. Show cart.
-        8. Checkout.`));
+        let op = parseInt(prompt(`Welcome to Console Coffee☕! Enter a number to pick an option:\n\n1. List all coffees.\n2. List all coffees by ascendent price.\n3. List all coffees by descendent price.\n4. List coffe by specific origin.\n5. Add coffes to cart.\n6. Remove coffees from cart.\n7. Show cart.\n8. Checkout.`));
         switch (op) {
             case 1:
                 //1. List all coffees by ascendent price.
@@ -167,4 +175,4 @@ const menu = () => {
         loop = confirm("Would you like to go back to the menu? Press Cancel to exit Console Coffee");
     }while(loop === true);
 }
-setTimeout(() => {menu()}, 500);
+setTimeout(() => {menu()}, 1000);
