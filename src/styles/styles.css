@@ -20,4 +20,15 @@ body{
     height: 100%;
     align-items: center;
     justify-content: center;
+    text-align: center;
+}
+@media (max-width:500px){
+    h1{
+        font-size: 45px;
+    }
+}
+@media (max-width:200px){
+    h1{
+        font-size: 25px;
+    }
 }
