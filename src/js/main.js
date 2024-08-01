@@ -58,28 +58,26 @@ const originList = () => {
 const cart = [];
 const addCart = () => {
     let loop;
-    do {
+    do{
         const message = coffeeList.map((el, index) => `${el.id} ${el.name}, ${el.origin}, ${el.price}`).join('\n\n');
         let item = parseInt(prompt(`Select one item to add to the cart: \n\n ${message}`));
         const searched = coffeeList.find(el => el.id === item);
         cart.push(searched);
-        loop = parseInt(prompt(`Press 1 to add another item to the cart, press 0 to go back`));
-    }while (loop === 1)
+        loop = confirm("Would you like to add another item to the cart?")
+    }while (loop === true)
 }
 
 //6. Remove coffees from cart.
 const removeCart = () => {
     let loop;
-    do {
+    do{
         const message = cart.map((el, index) => `${el.id} ${el.name}, ${el.origin}, ${el.price}`).join('\n\n');
         let item = parseInt(prompt(`Select one item to remove from the cart: \n\n ${message}`));
         const searched = coffeeList.find(el => el.id === item);
         
         cart.splice(searched.id, 1);
-        alert(`The item ${searched.name} has been removed from the cart`);
-
-        loop = parseInt(prompt(`Press 1 to remove another item to the cart, press 0 to go back`));
-    }while (loop === 1)
+        loop = confirm(`The item ${searched.name} has been removed from the cart. Would you like to remove another one?`);
+    }while (loop === true)
 }
 
 //7. Show cart.
@@ -119,8 +117,8 @@ const checkout = () => {
 }
 
 const menu = () => {
-    let loop = 1;
-    while (loop === 1) {
+    let loop;
+    do{  
         let op = parseInt(prompt(`Enter a number to pick an option:
         1. List all coffees.
         2. List all coffees by ascendent price.
@@ -166,7 +164,7 @@ const menu = () => {
             default:
                 break;
         }
-        loop = parseInt(prompt(`Press 1 to go back to the menu. Press 0 to exit from Console Coffee.`));
-    }
+        loop = confirm("Would you like to go back to the menu? Press Cancel to exit Console Coffee");
+    }while(loop === true);
 }
 setTimeout(() => {menu()}, 500);
